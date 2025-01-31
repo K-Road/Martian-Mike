@@ -42,6 +42,7 @@ func _on_level_timer_timeout():
 		time_left -= 1
 		hud.set_time_label(time_left)
 		if time_left < 0:
+			AudioPlayer.play_sfx("hurt")
 			reset_player()
 			time_left = level_time
 			hud.set_time_label(time_left)
@@ -56,10 +57,12 @@ func _process(delta: float) -> void:
 
 
 func _on_deathzone_body_entered(body: Node2D) -> void:
+	AudioPlayer.play_sfx("hurt")
 	reset_player()
 
 
 func _on_trap_touched_player() -> void:
+	AudioPlayer.play_sfx("hurt")
 	reset_player()
 
 func reset_player():

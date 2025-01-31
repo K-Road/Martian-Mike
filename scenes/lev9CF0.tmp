@@ -1,0 +1,60 @@
+[gd_scene load_steps=8 format=3 uid="uid://s2ef5ypxqkq4"]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_r5ip2"]
+[ext_resource type="PackedScene" uid="uid://bfvxroy5exw7n" path="res://scenes/player.tscn" id="2_pp1ya"]
+[ext_resource type="Texture2D" uid="uid://duf3flrbxsnj3" path="res://icon.svg" id="3_1qvt8"]
+[ext_resource type="PackedScene" uid="uid://csiilqkvlf5t" path="res://scenes/saw.tscn" id="4_svvhv"]
+[ext_resource type="PackedScene" uid="uid://bjmwcda2chqmt" path="res://scenes/jump_pad.tscn" id="4_wjhhp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gpubk"]
+size = Vector2(343.5, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o7bj0"]
+size = Vector2(1241, 20)
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_r5ip2")
+
+[node name="Player" parent="." instance=ExtResource("2_pp1ya")]
+position = Vector2(215, 195)
+
+[node name="Ground" type="StaticBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Ground"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(170.5, 215)
+scale = Vector2(2.67969, 0.15625)
+texture = ExtResource("3_1qvt8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+position = Vector2(170.25, 215)
+shape = SubResource("RectangleShape2D_gpubk")
+
+[node name="Deathzone" type="Area2D" parent="."]
+position = Vector2(0, 369)
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Deathzone"]
+position = Vector2(189.5, 0)
+shape = SubResource("RectangleShape2D_o7bj0")
+
+[node name="StartPosition" type="Marker2D" parent="."]
+position = Vector2(169, 153)
+
+[node name="Traps" type="Node2D" parent="."]
+
+[node name="Saw" parent="Traps" instance=ExtResource("4_svvhv")]
+position = Vector2(286, 185)
+
+[node name="Objects" type="Node2D" parent="."]
+
+[node name="JumpPad" parent="Objects" instance=ExtResource("4_wjhhp")]
+position = Vector2(124, 205)
+
+[node name="JumpPad2" parent="Objects" instance=ExtResource("4_wjhhp")]
+position = Vector2(92, 205)
+jump_pad_force = 350
+
+[connection signal="body_entered" from="Deathzone" to="." method="_on_deathzone_body_entered"]
+[connection signal="touched_player" from="Traps/Saw" to="." method="_on_trap_touched_player"]
